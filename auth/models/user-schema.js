@@ -7,9 +7,14 @@ const TOKEN_TIMEOUT = process.env.TOKEN_TIMEOUT || '7d';
 const SECRET = process.env.SECRET || 'sd5346dg8adDhZ56w4e';
 
 const users = mongoose.Schema({
-  username: { type : String , unique : true, required : true},
+  username: { type :String , unique : true, required : true,lowercase:true},
+  fullName: {type:String,required:true},
   password:{type:String,required:true},
-  role:{type:String, enum:['user', 'admin'], default:'user'},
+  gender: {type:String, required:true, lowercase:true, enum:['female','male']},
+  role:{type:String,lowercase:true, enum:['user', 'admin'], default:'user'},
+  country:{type:String,lowercase:true,required:true,default:'jordan'},
+  birthday:{type:String, required:true},
+  createdAt:{type:String, default:new Date().toLocaleString()},
 });
 
 let roles = {
@@ -21,6 +26,11 @@ let roles = {
 
 users.pre('save',async function(){
   this.password = await bcrypt.hash(this.password,10);
+  let birthDate = this.birthday.split('/');
+  if(birthDate[1] > 12 || birthDate[1] < 0 || birthDate[0] > 31 || birthDate[0] < 1 || birthDate[2] > 2020 || birthDate[2] < 1900){
+    throw new Error('Please use a valid birthday, with DD/MM/YYYY Format.');
+  }
+  this.birthday = new Date(birthDate[2],birthDate[1],birthDate[0]).toLocaleDateString();
 });
 
 users.statics.authenticateBasic = async function(username,password){
