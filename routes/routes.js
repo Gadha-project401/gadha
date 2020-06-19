@@ -8,6 +8,8 @@ const basicAuth = require('../auth/middleware/basic');
 const bearerMiddleware = require('../auth/middleware/bearer-auth');
 const permissions = require('../auth/middleware/authorize');
 const oauth = require('../auth/middleware/oauth');
+const goals = require('../lib/models/goals/goals-model');
+
 
 // ***************--- The Signin/Signup Routes ---***************
 
@@ -25,7 +27,15 @@ router.post('/motivation', bearerMiddleware, postMotivation);
 router.put('/motivation/:id', bearerMiddleware, permissions('update'), putMotivation);
 router.delete('/motivation/:id', bearerMiddleware, permissions('delete'), deleteMotivation);
 
-// ***************--- The API Functions ---***************
+router.get('/goals', getGoals);
+router.get('/goals/mine', bearerMiddleware, permissions('read'), getGoalsUser);
+router.post('/goals', bearerMiddleware, postGoals);
+router.put('/goals/:id', bearerMiddleware, permissions('update'), putGoals);
+router.delete('/goals/:id', bearerMiddleware, deleteGoals);
+
+
+// ***************--- The API Functions motivation ---***************
+
 
 function getMotivation(req, res, next){
   motivation
@@ -68,6 +78,46 @@ function deleteMotivation(req, res, next){
 
 }   
 
+// ***************--- The API Functions goals ---***************
+
+function getGoals(req, res, next){
+  goals
+    .get()
+    .then(data => {res.status(200).json(data);})
+    .catch(next);
+}
+
+function getGoalsUser(req, res, next){  
+  goals
+    .get(req.user.username)
+    .then((data) => res.status(200).json(data))
+    .catch(next);
+}
+    
+function postGoals(req, res, next){
+
+  req.body.createdBy = req.user.username;
+  goals
+    .post(req.body)
+    .then(data => {res.status(201).json(data);})
+    .catch(next);
+}
+    
+function putGoals(req, res, next){
+
+  goals
+    .put(req.params.id, req.body)
+    .then(data => res.status(200).json(data))
+    .catch(next);
+}
+
+function deleteGoals(req, res, next){
+
+  goals
+    .delete(req.params.id)
+    .then(data => { res.status(200).json(data);})
+    .catch(next);
+}   
 
 // ***************--- The Sign up Functions ---***************
 
