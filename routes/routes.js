@@ -7,12 +7,15 @@ const motivation = require('../lib/models/motivation/motivation-model');
 const basicAuth = require('../auth/middleware/basic');
 const bearerMiddleware = require('../auth/middleware/bearer-auth');
 const permissions = require('../auth/middleware/authorize');
+const oauth = require('../auth/middleware/oauth');
 
 // ***************--- The Signin/Signup Routes ---***************
 
 router.post('/signup', signup);
 router.post('/signin',basicAuth, signin);
 router.get('/users',bearerMiddleware,permissions('delete'),getUsers);
+router.get('/oauth', oauth, oauthHandler);
+
 
 // ***************--- The API Routes ---***************
 
@@ -94,6 +97,8 @@ function getUsers(req,res,next){
       res.status(200).json(result);
     }).catch(next);
 }
-
+function oauthHandler (req,res,next){
+  res.status(200).send(req.token);
+}
 module.exports = router;
 
