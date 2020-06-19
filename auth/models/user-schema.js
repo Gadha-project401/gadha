@@ -10,7 +10,7 @@ const users = mongoose.Schema({
   username: { type :String , unique : true, required : true,lowercase:true},
   fullName: {type:String,required:true},
   password:{type:String,required:true},
-  gender: {type:String, required:true, lowercase:true, enum:['female','male']},
+  gender: {type:String, required:true, lowercase:true, enum:['female','male','unspecified']},
   role:{type:String,lowercase:true, enum:['user', 'admin'], default:'user'},
   country:{type:String,lowercase:true,required:true,default:'jordan'},
   birthday:{type:String, required:true},
