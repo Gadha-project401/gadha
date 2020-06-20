@@ -7,8 +7,10 @@ const motivation = require('../lib/models/motivation/motivation-model');
 const basicAuth = require('../auth/middleware/basic');
 const bearerMiddleware = require('../auth/middleware/bearer-auth');
 const permissions = require('../auth/middleware/authorize');
+// const permissionGoals = require('../auth/middleware/authorize-goals');
 const oauth = require('../auth/middleware/oauth');
 const goals = require('../lib/models/goals/goals-model');
+
 
 
 // ***************--- The Signin/Signup Routes ---***************
@@ -31,7 +33,7 @@ router.get('/goals', getGoals);
 router.get('/goals/mine', bearerMiddleware, permissions('read'), getGoalsUser);
 router.post('/goals', bearerMiddleware, postGoals);
 router.put('/goals/:id', bearerMiddleware, permissions('update'), putGoals);
-router.delete('/goals/:id', bearerMiddleware, deleteGoals);
+router.delete('/goals/:id', bearerMiddleware,permissions('delete'), deleteGoals);
 
 
 // ***************--- The API Functions motivation ---***************
