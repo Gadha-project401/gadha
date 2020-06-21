@@ -7,8 +7,8 @@ const motivation = require('../lib/models/motivation/motivation-model');
 const basicAuth = require('../auth/middleware/basic');
 const bearerMiddleware = require('../auth/middleware/bearer-auth');
 const permissions = require('../auth/middleware/authorize');
-// const permissionGoals = require('../auth/middleware/authorize-goals');
 const oauth = require('../auth/middleware/oauth');
+const linkedinOauth = require('../auth/middleware/linkedin-oauth');
 const goals = require('../lib/models/goals/goals-model');
 
 
@@ -19,6 +19,7 @@ router.post('/signup', signup);
 router.post('/signin',basicAuth, signin);
 router.get('/users',bearerMiddleware,permissions('delete'),getUsers);
 router.get('/oauth', oauth, oauthHandler);
+router.get('/oauthlinkedin', linkedinOauth, oauthHandler);
 
 
 // ***************--- The API Routes ---***************
