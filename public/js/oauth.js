@@ -5,7 +5,7 @@ let URL = 'https://accounts.google.com/o/oauth2/v2/auth';
 let options = {
   scope: 'email profile',
   response_type: 'code',
-  redirect_uri: 'http://localhost:3000/oauth',
+  redirect_uri: 'https://gadha-dev.herokuapp.com/oauth',
   client_id: '198802182058-hkdf775258tu1ch58721ghinja5audfc.apps.googleusercontent.com',
 };
 let QueryString = Object.keys(options).map((key) => {
@@ -21,7 +21,7 @@ let linkedinURL = 'https://www.linkedin.com/oauth/v2/authorization';
 let optionsLi = {
   scope: 'r_liteprofile r_emailaddress',
   response_type: 'code',
-  redirect_uri: 'http://localhost:3000/oauthlinkedin',
+  redirect_uri: 'https://gadha-dev.herokuapp.com/oauthlinkedin',
   client_id: '77jtgcl3okd9b0',
 };
 let linkedinQueryString = Object.keys(optionsLi).map((key) => {
