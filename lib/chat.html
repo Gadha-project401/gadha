@@ -53,10 +53,10 @@
         </section>
     </main>
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
     <script>
         $(function(){
-            let socket = io('https://gadha-dev.herokuapp.com/chat');
+            let socket = io('https://gadha-dev.herokuapp.com');
             let $messageForm = $('#messageForm');
             let $message = $('#message');
             let $chat = $('#chat');
