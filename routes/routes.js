@@ -32,6 +32,7 @@ router.delete('/motivation/:id', bearerMiddleware, permissions('delete'), delete
 
 router.get('/goals', getGoals);
 router.get('/goals/mine', bearerMiddleware, permissions('read'), getGoalsUser);
+router.get('/goals/progress', bearerMiddleware, permissions('read'), getProgress);
 router.post('/goals', bearerMiddleware, postGoals);
 router.put('/goals/:id', bearerMiddleware, permissions('update'), putGoals);
 router.delete('/goals/:id', bearerMiddleware,permissions('delete'), deleteGoals);
@@ -121,6 +122,33 @@ function deleteGoals(req, res, next){
     .then(data => { res.status(200).json(data);})
     .catch(next);
 }   
+
+function getProgress(req,res,next){
+  goals
+    .get(req.user.username)
+    .then((data) => {
+      let count = 0;
+      let complete = 0;
+      let completedTasks = [];
+      let incompleteTasks = [];
+      if(data[0]){
+        data.forEach((value,number)=>{
+          if(value.status === 'complete'){
+            complete+=1;
+            completedTasks.push({title:value.title,doneAt: value.dueBy});
+          } else {incompleteTasks.push({title:value.title,dueBy: value.dueBy});}
+          count += 1;
+        });
+      }
+      let progress = ((complete / count) * 100).toFixed(2) +'%';
+      res.status(200).json({
+        progress: progress,
+        completed: completedTasks,
+        incomplete: incompleteTasks,
+      });
+    })
+    .catch(next);
+}
 
 // ***************--- The Sign up Functions ---***************
 
