@@ -11,7 +11,7 @@ const oauth = require('../auth/middleware/oauth');
 const linkedinOauth = require('../auth/middleware/linkedin-oauth');
 const goals = require('../lib/models/goals/goals-model');
 const io = require('socket.io-client');
-const socket = io.connect('https://gadha-dev.herokuapp.com/',{secure: false});
+const socket = io.connect('http://gadha-dev.herokuapp.com/',{secure: false});
 
 
 // ***************--- The Signin/Signup Routes ---***************
