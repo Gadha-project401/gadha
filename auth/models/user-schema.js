@@ -15,7 +15,7 @@ const users = mongoose.Schema({
   role:{type:String,lowercase:true, enum:['user', 'admin'], default:'user'},
   country:{type:String,lowercase:true,required:true,default:'jordan'},
   birthday:{type:String, required:true},
-  createdAt:{type:String, default:new Date().toLocaleString()},
+  createdAt:{type:Date, default:new Date()},
 });
 
 let roles = {
@@ -28,8 +28,8 @@ let roles = {
 users.pre('save',async function(){
   this.password = await bcrypt.hash(this.password,10);
   let birthDate = this.birthday.split('/');
-  if(birthDate[1] > 12 || birthDate[1] < 0 || birthDate[0] > 31 || birthDate[0] < 1 || birthDate[2] > 2020 || birthDate[2] < 1900){
-    throw new Error('Please use a valid birthday, with DD/MM/YYYY Format.');
+  if(birthDate[0] > 12 || birthDate[0] < 0 || birthDate[1] > 31 || birthDate[1] < 1 || birthDate[2] > 2020 || birthDate[2] < 1900){
+    throw new Error('Please use a valid birthday, with MM/DD/YYYY Format.');
   }
   this.birthday = new Date(birthDate[2],birthDate[1],birthDate[0]).toLocaleDateString();
 });
