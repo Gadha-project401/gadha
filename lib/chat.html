@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat</title>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <style>
+       body{
+           margin-top:30px ;
+       }
+       #messageArea{
+           display: none;
+       }
+   </style>
+</head>
+<body>
+    <main class="container">
+        <section id="userFormArea" class="row">
+            <div class="col-md-12">
+                <form id="userForm">
+                    <div class="form-group">
+                        <label for="">Enter UserName</label>
+                        <input  id="username" class="form-control"></textarea>
+                        <br>
+                        <input type="submit" class="btn btn-primary" value="Join Gadha's Chat">
+                    </div>
+                </form>
+            </div>
+        </section>
+        <section class="row" id="messageArea">
+            <aside class="col-md-4">
+                <h3>Motivators</h3>
+                <ul class="list-group" id="users"> 
+
+                </ul>
+
+            </aside>
+            <div class="col-md-8">
+                <div class="chat" id="chat">
+
+                </div>
+                <form id="messageForm">
+                    <div class="form-group">
+                        <label for="">Enter Message</label>
+                        <textarea  id="message" class="form-control"></textarea>
+                        <br>
+                        <input type="submit" class="btn btn-primary" value="Send Message">
+                    </div>
+                </form>
+
+            </div>
+        </section>
+    </main>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        $(function(){
+            let socket = io('https://gadha-dev.herokuapp.com/');
+            let $messageForm = $('#messageForm');
+            let $message = $('#message');
+            let $chat = $('#chat');
+            
+            let $messageArea = $('#messageArea');
+            let $userFormArea = $('#userFormArea');
+            let $userForm = $('#userForm');
+            let $users = $('#users');
+            let $username = $('#username');
+
+
+
+            $messageForm.submit(e=>{
+                e.preventDefault();
+                socket.emit('send message',$message.val());
+                $message.val('');
+            });            
+            socket.on('new message',data=>{
+                $chat.append(`<div class="well"><strong> ${data.user}  </strong>  ${data.msg}  </div>`);
+            })
+
+            $userForm.submit(e=>{
+                e.preventDefault();
+                socket.emit('new user',$username.val(),data=>{
+                    if(data){
+                        $userFormArea.hide();
+                        $messageArea.show();
+                    }
+                });
+                $username.val('');
+            });
+
+            socket.on('get users',data=>{
+                let html ='';
+                for(let i =0 ;i<data.length;i++){
+                    html += '<li class="list-group-item">' + data[i] + '</li>';
+                }
+                $users.html(html);
+            })
+
+            socket.on('not',data=>{
+               console.log('data',data);
+               alert(' ' + data);
+            });
+        });
+    </script>
+</body>
+</html>

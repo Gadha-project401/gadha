@@ -10,7 +10,8 @@ const permissions = require('../auth/middleware/authorize');
 const oauth = require('../auth/middleware/oauth');
 const linkedinOauth = require('../auth/middleware/linkedin-oauth');
 const goals = require('../lib/models/goals/goals-model');
-
+const io = require('socket.io-client');
+const socket = io.connect('https://gadha-dev.herokuapp.com/');
 
 
 // ***************--- The Signin/Signup Routes ---***************
@@ -60,7 +61,9 @@ function postMotivation(req, res, next){
   req.body.createdBy = req.user.username;
   motivation
     .post(req.body)
-    .then(data => {res.status(201).json(data);})
+    .then(data => {
+      socket.emit('send post',data.title);
+      res.status(201).json(data);})
     .catch(next);
 }
     
