@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Chat</title>
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <style>
        body{
@@ -52,11 +52,11 @@
             </div>
         </section>
     </main>
-    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script>
         $(function(){
-            let socket = io('http://gadha-dev.herokuapp.com/',{secure: true});
+            let socket = io.connect('/');
             let $messageForm = $('#messageForm');
             let $message = $('#message');
             let $chat = $('#chat');
