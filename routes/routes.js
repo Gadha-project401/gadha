@@ -1,5 +1,11 @@
 'use strict';
 
+/**
+ * @module Routes
+ * @requires express
+ * @requires socket.io-client
+ * 
+ */
 const express = require('express');
 const router = express.Router();
 const user = require('../auth/models/user-schema');
@@ -41,7 +47,12 @@ router.delete('/goals/:id', bearerMiddleware,permissions('delete'), deleteGoals)
 
 // ***************--- The API Functions motivation ---***************
 
-
+/**
+ * @function getMotivation
+ * @param req 
+ * @param {object} res json(data)
+ * @param next 
+ */
 function getMotivation(req, res, next){
   motivation
     .get()
@@ -49,6 +60,12 @@ function getMotivation(req, res, next){
     .catch(next);
 }
 
+/**
+ * @function getMotivationUser
+ * @param {object} req  req.params.user
+ * @param {object} res json(data)
+ * @param next 
+ */
 function getMotivationUser(req, res, next){
   motivation
     .get(req.params.user)
@@ -56,8 +73,13 @@ function getMotivationUser(req, res, next){
     .catch(next);
 }
     
+/**
+ * @function postMotivation
+ * @param {object} req req.body
+ * @param {object} res json(data)
+ * @param next 
+ */
 function postMotivation(req, res, next){
-//   console.log('----->>>>I am inisde post route !');
   req.body.createdBy = req.user.username;
   motivation
     .post(req.body)
@@ -66,9 +88,14 @@ function postMotivation(req, res, next){
       res.status(201).json(data);})
     .catch(next);
 }
-    
+   
+/**
+ * @function putMotivation
+ * @param {object} req req.params.id, req.body 
+ * @param {object} res json(data)
+ * @param next 
+ */
 function putMotivation(req, res, next){
-//   console.log('----->>>> testing update route ');
   motivation
     .put(req.params.id, req.body)
     .then(data => res.status(200).json(data))
@@ -76,8 +103,14 @@ function putMotivation(req, res, next){
   
 }
 
+/**
+ * @function deleteMotivation
+ * @param {object} req req.params.id
+ * @param {object} res json(data)
+ * @param next 
+ */
+
 function deleteMotivation(req, res, next){
-//   console.log('----->>>> testing delete route ');
   motivation
     .delete(req.params.id)
     .then(data => { res.status(200).json(data);})
@@ -87,6 +120,12 @@ function deleteMotivation(req, res, next){
 
 // ***************--- The API Functions goals ---***************
 
+/**
+ * @function getGoals
+ * @param req 
+ * @param {object} res json(data)
+ * @param next 
+ */
 function getGoals(req, res, next){
   goals
     .get()
@@ -94,13 +133,25 @@ function getGoals(req, res, next){
     .catch(next);
 }
 
+/**
+ * @function getGoalsUser
+ * @param {object} req req.user.username
+ * @param {object} res json(data)
+ * @param next 
+ */
 function getGoalsUser(req, res, next){  
   goals
     .get(req.user.username)
     .then((data) => res.status(200).json(data))
     .catch(next);
 }
-    
+
+/**
+ * @function postGoals
+ * @param {object} req req.body
+ * @param {object} res json(data)
+ * @param next 
+ */    
 function postGoals(req, res, next){
 
   req.body.createdBy = req.user.username;
@@ -110,6 +161,12 @@ function postGoals(req, res, next){
     .catch(next);
 }
     
+/**
+ * @function putGoals
+ * @param {object} req req.params.id, req.body
+ * @param {object} res json(data) 
+ * @param next 
+ */
 function putGoals(req, res, next){
 
   goals
@@ -118,6 +175,12 @@ function putGoals(req, res, next){
     .catch(next);
 }
 
+/**
+ * @function deleteGoals
+ * @param {object} req req.params.id
+ * @param {object} res json(data) 
+ * @param next 
+ */
 function deleteGoals(req, res, next){
 
   goals
@@ -126,6 +189,12 @@ function deleteGoals(req, res, next){
     .catch(next);
 }   
 
+/**
+ * @function getProgress
+ * @param {object} req req.user.username
+ * @param {object} res json(data)  
+ * @param next 
+ */
 function getProgress(req,res,next){
   goals
     .get(req.user.username)
@@ -155,6 +224,12 @@ function getProgress(req,res,next){
 
 // ***************--- The Sign up Functions ---***************
 
+/**
+ * @function signup
+ * @param {object} req req.body
+ * @param {object} res json(data)   
+ * @param next 
+ */
 function signup (req,res,next){
   user
     .create(req.body)
@@ -166,6 +241,12 @@ function signup (req,res,next){
     }).catch(next);
 }
   
+/**
+ * @function signin
+ * @param {object} req 
+ * @param {object} res json(answer)  
+ * @param next 
+ */
 function signin(req,res,next){
   console.log(req.token);
   res.cookie('token',req.token);
@@ -175,12 +256,25 @@ function signin(req,res,next){
   res.status(200).json(answer);
 }
 
+/**
+ * @function getUsers
+ * @param {object} req 
+ * @param {object} res json(result)
+ * @param next 
+ */
 function getUsers(req,res,next){
   user.find({})
     .then(result=>{
       res.status(200).json(result);
     }).catch(next);
 }
+
+/**
+ * @function oauthHandler
+ * @param {object} req 
+ * @param {object} res send(req.token)
+ * @param next 
+ */
 function oauthHandler (req,res,next){
   res.status(200).send(req.token);
 }
