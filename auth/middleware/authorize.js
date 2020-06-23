@@ -1,6 +1,22 @@
 'use strict';
+
+/**
+ * This is the authorization module that is responsible for allowing users passage depending on their roles, user or admin
+ * @module authorization
+ */
+
 // This is the AC (Access Control) middleware
 
+/**
+ * @function authorize
+ * @param {string} role takes in the user specific role like (update,delete,read etc...)
+ * @param {object} req The request object.
+ * @param {object} res The response object.
+ * @param {function} next The next function.
+ * @property {string} model It's the destination of the schema file when it's required.
+ * @property {string} path Determines the path of the request.
+ * @property {string} req.user.userRole Contains information wether the user is an admin or a user
+ */
 module.exports = (role) => {
   return (req,res,next) => {
     
