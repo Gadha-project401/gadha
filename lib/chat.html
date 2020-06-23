@@ -56,7 +56,7 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
         $(function(){
-            let socket = io.connect('/');
+            let socket = io('http://gadha-dev.herokuapp.com/',{secure: true});
             let $messageForm = $('#messageForm');
             let $message = $('#message');
             let $chat = $('#chat');
