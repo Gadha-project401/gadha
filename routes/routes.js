@@ -4,6 +4,12 @@
  * @module Routes
  * @requires express
  * @requires socket.io-client
+ * @requires basicAuth
+ * @requires motivation-model
+ * @requires authorize
+ * @requires beare-auth
+ * @requires goals-model
+ * @requires linkedin-oauth
  * 
  */
 const express = require('express');
@@ -49,9 +55,9 @@ router.delete('/goals/:id', bearerMiddleware,permissions('delete'), deleteGoals)
 
 /**
  * @function getMotivation
- * @param req 
- * @param {object} res json(data)
- * @param next 
+ * @param {object} req The request object that will ask for the list of motivation.
+ * @param {object} res The response object with the list of motivation.
+ * @param {function} next The next function that is responsible for the middlewares.
  */
 function getMotivation(req, res, next){
   motivation
@@ -62,9 +68,9 @@ function getMotivation(req, res, next){
 
 /**
  * @function getMotivationUser
- * @param {object} req  req.params.user
- * @param {object} res json(data)
- * @param next 
+ * @param {object} req The request object that will ask for the list of motivation from one user.
+ * @param {object} res The response object with the list of motivation from one user.
+ * @param {function} next The next function that is responsible for the middlewares.
  */
 function getMotivationUser(req, res, next){
   motivation
@@ -75,9 +81,9 @@ function getMotivationUser(req, res, next){
     
 /**
  * @function postMotivation
- * @param {object} req req.body
- * @param {object} res json(data)
- * @param next 
+ * @param {object} req The request object that will create a new post in motivation.
+ * @param {object} res The response object with the new post in motivation.
+ * @param {function} next The next function that is responsible for the middlewares.
  */
 function postMotivation(req, res, next){
   req.body.createdBy = req.user.username;
@@ -91,9 +97,10 @@ function postMotivation(req, res, next){
    
 /**
  * @function putMotivation
- * @param {object} req req.params.id, req.body 
- * @param {object} res json(data)
- * @param next 
+ * @param {object} req The request object that will update a post.
+ * @param {object} res The response object with the updated post.
+ * @param {function} next The next function that is responsible for the middlewares.
+ * @description The users are only allowed to update their own posts, while admins can update anyone's post, pass the ID in the route.
  */
 function putMotivation(req, res, next){
   motivation
@@ -105,9 +112,10 @@ function putMotivation(req, res, next){
 
 /**
  * @function deleteMotivation
- * @param {object} req req.params.id
- * @param {object} res json(data)
- * @param next 
+ * @param {object} req The request object that will delete a post.
+ * @param {object} res The response object with the deleted post.
+ * @param {function} next The next function that is responsible for the middlewares.
+ * @description The users are only allowed to delete their own posts, while admins can delete anyone's post, pass the ID in the route.
  */
 
 function deleteMotivation(req, res, next){
@@ -122,9 +130,10 @@ function deleteMotivation(req, res, next){
 
 /**
  * @function getGoals
- * @param req 
- * @param {object} res json(data)
- * @param next 
+ * @param {object} req The request object that will ask for the list of public goals.
+ * @param {object} res The response object with the list of public goals.
+ * @param {function} next The next function that is responsible for the middlewares.
+ * @description Only public posts will be provided, private goals won't be shared.
  */
 function getGoals(req, res, next){
   goals
@@ -135,9 +144,9 @@ function getGoals(req, res, next){
 
 /**
  * @function getGoalsUser
- * @param {object} req req.user.username
- * @param {object} res json(data)
- * @param next 
+ * @param {object} req The request object that will ask for the list of motivation of the logged in user.
+ * @param {object} res The response object with the list of goals of the logged in user.
+ * @param {function} next The next function that is responsible for the middlewares.
  */
 function getGoalsUser(req, res, next){  
   goals
@@ -148,9 +157,9 @@ function getGoalsUser(req, res, next){
 
 /**
  * @function postGoals
- * @param {object} req req.body
- * @param {object} res json(data)
- * @param next 
+ * @param {object} req The request object that will create a new post in goals.
+ * @param {object} res The response object with the new post in goals.
+ * @param {function} next The next function that is responsible for the middlewares.
  */    
 function postGoals(req, res, next){
 
@@ -163,9 +172,10 @@ function postGoals(req, res, next){
     
 /**
  * @function putGoals
- * @param {object} req req.params.id, req.body
- * @param {object} res json(data) 
- * @param next 
+ * @param {object} req The request object that will update a goal.
+ * @param {object} res The response object with the updated goal.
+ * @param {function} next The next function that is responsible for the middlewares.
+ * @description The users are only allowed to update their own goals, while admins can update anyone's goals, pass the ID in the route.
  */
 function putGoals(req, res, next){
 
@@ -177,9 +187,10 @@ function putGoals(req, res, next){
 
 /**
  * @function deleteGoals
- * @param {object} req req.params.id
- * @param {object} res json(data) 
- * @param next 
+ * @param {object} req The request object that will delete a goal.
+ * @param {object} res The response object with the deleted goal.
+ * @param {function} next The next function that is responsible for the middlewares.
+ * @description The users are only allowed to delete their own posts, while admins can delete anyone's post, pass the ID in the route.
  */
 function deleteGoals(req, res, next){
 
@@ -191,9 +202,10 @@ function deleteGoals(req, res, next){
 
 /**
  * @function getProgress
- * @param {object} req req.user.username
- * @param {object} res json(data)  
- * @param next 
+ * @param {object} req The request object that will ask for the list of public goals.
+ * @param {object} res The response object with the list of public goals.
+ * @param {function} next The next function that is responsible for the middlewares.
+ * @description Only public posts will be provided, private goals won't be shared.
  */
 function getProgress(req,res,next){
   goals
@@ -226,9 +238,9 @@ function getProgress(req,res,next){
 
 /**
  * @function signup
- * @param {object} req req.body
- * @param {object} res json(data)   
- * @param next 
+ * @param {object} req The request object that will create a new user.
+ * @param {object} res The response object with the username and the token.
+ * @param {function} next The next function that is responsible for the middlewares.
  */
 function signup (req,res,next){
   user
@@ -243,9 +255,9 @@ function signup (req,res,next){
   
 /**
  * @function signin
- * @param {object} req 
- * @param {object} res json(answer)  
- * @param next 
+ * @param {object} req The request object that will login to an account using basic authentication.
+ * @param {object} res The response object with the JSON web token.
+ * @param {function} next The next function that is responsible for the middlewares.
  */
 function signin(req,res,next){
   console.log(req.token);
@@ -258,9 +270,9 @@ function signin(req,res,next){
 
 /**
  * @function getUsers
- * @param {object} req 
- * @param {object} res json(result)
- * @param next 
+ * @param {object} req The request object that will ask for list of users.
+ * @param {object} res The response object with the new post in goals.
+ * @param {function} next The next function that is responsible for the middlewares.
  */
 function getUsers(req,res,next){
   user.find({})
@@ -271,9 +283,9 @@ function getUsers(req,res,next){
 
 /**
  * @function oauthHandler
- * @param {object} req 
- * @param {object} res send(req.token)
- * @param next 
+ * @param {object} req The request object that will be responsible for the OAuth handshakes.
+ * @param {object} res The response object with the token to login.
+ * @param {function} next The next function that is responsible for the middlewares.
  */
 function oauthHandler (req,res,next){
   res.status(200).send(req.token);
