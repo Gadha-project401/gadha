@@ -1,4 +1,12 @@
 'use strict';
+
+/**
+ * @module GoogleOAuth
+ */
+/**
+ * @requires superagent
+ */
+
 require('dotenv').config();
 const UserSchema = require('../models/user-schema');
 const superagent = require('superagent');
@@ -8,6 +16,14 @@ const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const API_SERVER = process.env.API_SERVER;
 const OAUTH_PASS = process.env.OAUTH_PASS;
+
+/**
+ * @function awaitToken
+ * @param {String} req - request token
+ * @param {String} res - response to the server
+ * @param {String} next - continue
+ */
+
 module.exports = async (req, res, next) => {
   try {
     let code = req.query.code;
@@ -22,6 +38,16 @@ module.exports = async (req, res, next) => {
     next(`ERROR: ${e.message}`);
   }
 };
+
+/**
+ * @function exchangeCodeForToken
+ * @param {String} client_id - The private application id
+ * @param {String} client_secret - The private application password
+ * @param {String} redirect_uri - The location that the authorization server will send the user to 
+ * @param {String} code - The granted code from google
+ * @param {String} grant_type - The granted authorization type
+ */
+
 async function exchangeCodeForToken(code) {
   let tokenResponse = await superagent.post(tokenServerUrl).send({
     client_id: CLIENT_ID,
@@ -33,6 +59,12 @@ async function exchangeCodeForToken(code) {
   let access_token = tokenResponse.body.access_token;
   return access_token;
 }
+
+/**
+ * @function getRemoteUserInfo
+ * @param {String} token - Get the user information from google servers
+ */
+
 async function getRemoteUserInfo(token) {
   let userResponse = await superagent
     .get(remoteAPI)
@@ -41,6 +73,12 @@ async function getRemoteUserInfo(token) {
   let user = userResponse.body;
   return user;
 }
+
+/**
+ * @function getUser
+ * @param {String} remoteUser - Generate the token from google servers
+ */
+
 async function getUser(remoteUser) {
   let userRecord = {
     username: remoteUser.name,
