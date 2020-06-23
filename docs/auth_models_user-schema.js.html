@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: auth/models/user-schema.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: auth/models/user-schema.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
+
+/**
+ * @module users
+ */
+/**
+ * @requires bcrypt
+ * @requires jsonwebtoken
+ * @requires mongoose
+ */
+
+const bcrypt =  require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+const mongoose = require('mongoose');
+const TOKEN_TIMEOUT = process.env.TOKEN_TIMEOUT || '7d';
+const SECRET = process.env.SECRET || 'sd5346dg8adDhZ56w4e';
+
+/**
+ * user schema
+ * @property {string} username - The account's unique name
+ * @property {string} fullName - The user's full name
+ * @property {string} password - The account's password
+ * @property {string} gender - The user's gender
+ * @property {string} role - The account's role (admin, user)
+ * @property {string} country - The user's country
+ * @property {string} birthday - The user's birth date
+ * @property {string} createdAt - The time the account was created
+ */
+
+const users = mongoose.Schema({
+  username: { type :String , unique : true, required : true,lowercase:true},
+  fullName: {type:String,required:true},
+  password:{type:String,required:true},
+  gender: {type:String, required:true, lowercase:true, enum:['female','male','unspecified']},
+  role:{type:String,lowercase:true, enum:['user', 'admin'], default:'user'},
+  country:{type:String,lowercase:true,required:true,default:'jordan'},
+  birthday:{type:String, required:true},
+  createdAt:{type:Date, default:new Date()},
+});
+
+let roles = {
+  admin: ['read','create','update','delete'],
+  user: ['read','create','update','delete'],
+};
+
+/**
+ * @method pre - Data Validation
+ * @param {Date} birthDate - Date Validation
+ */
+
+users.pre('save',async function(){
+  this.password = await bcrypt.hash(this.password,10);
+  let birthDate = this.birthday.split('/');
+  if(birthDate[0] > 12 || birthDate[0] &lt; 0 || birthDate[1] > 31 || birthDate[1] &lt; 1 || birthDate[2] > 2020 || birthDate[2] &lt; 1900){
+    throw new Error('Please use a valid birthday, with MM/DD/YYYY Format.');
+  }
+  this.birthday = new Date(birthDate[2],birthDate[1],birthDate[0]).toLocaleDateString();
+});
+
+/**
+ * @method authenticateBasic 
+ * @param {String} username - The account's name
+ * @param {String} password - The account's Password
+ */
+
+users.statics.authenticateBasic = async function(username,password){
+  let theUser = await this.find({username:username});
+  let valid = await bcrypt.compare(password,theUser[0].password);
+  return valid ? theUser : Promise.reject();
+};
+
+/**
+ * @method generateToken
+ * @param {String} user - The username
+ */
+
+users.statics.generateToken = function(user){
+  let token = jwt.sign({username: user.username ,_id:user._id,userRole:user.role ,role:roles[user.role]},SECRET,{expiresIn:TOKEN_TIMEOUT});
+  return token;
+};
+
+/**
+ * @method verifyToken
+ * @param {string} token - The user's token
+ */
+
+users.statics.verifyToken = function (token){
+  return jwt.verify(token,SECRET, async function(err,decoded){
+    if(err){
+      console.log('This is not a valid token: ' + err);
+      return Promise.reject(err);
+    }
+
+    // console.log('the decoded value is: ');
+    // console.log(decoded);
+    let username = decoded.username;
+    let theUser = await mongoose.model('users',users).find({username:username});
+    // console.log(theUser);
+
+    if(theUser[0]){
+      return Promise.resolve(decoded);
+    }
+    return Promise.reject();
+  });
+};
+
+module.exports = mongoose.model('users',users);</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-authorization.html">authorization</a></li><li><a href="module-basic.html">basic</a></li><li><a href="module-bearerAuth.html">bearerAuth</a></li><li><a href="module-goalsModel.html">goalsModel</a></li><li><a href="module-goalsSchema.html">goalsSchema</a></li><li><a href="module-GoogleOAuth.html">GoogleOAuth</a></li><li><a href="module-linkedInOAuth.html">linkedInOAuth</a></li><li><a href="module-motivationModel.html">motivationModel</a></li><li><a href="module-motivationSchema.html">motivationSchema</a></li><li><a href="module-Routes.html">Routes</a></li><li><a href="module-server.html">server</a></li><li><a href="module-users.html">users</a></li></ul><h3>Classes</h3><ul><li><a href="module-goalsModel-Model.html">Model</a></li><li><a href="module-motivationModel-Model.html">Model</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Tue Jun 23 2020 17:53:52 GMT+0300 (Eastern European Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

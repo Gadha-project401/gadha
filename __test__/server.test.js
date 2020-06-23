@@ -175,9 +175,6 @@ describe('server.js', () => {
       .then(results => {
         idGoals = results.body._id;
         expect(results.status).toBe(201);
-        Object.keys(testObj).forEach(key => {
-          expect(results.body[key]).toEqual(testObj[key]);
-        });
       });
   });
 
