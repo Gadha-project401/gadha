@@ -56,7 +56,7 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
         $(function(){
-            let socket = io('/');
+            let socket = io.connect('/');
             let $messageForm = $('#messageForm');
             let $message = $('#message');
             let $chat = $('#chat');
