@@ -31,7 +31,7 @@ it('should /signup as an admin role', () => {
 it('should  /signin as an admin role', () => {
     
   return mockRequest
-    .post('/signin')
+    .get('/signin')
     .set('Authorization', `Basic YWRtaW5Vc2VyOjY2`)
     .then(data => {
       token = data.body.token;

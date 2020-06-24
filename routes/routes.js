@@ -29,7 +29,7 @@ const socket = io.connect('https://gadha-dev.herokuapp.com/');
 // ***************--- The Signin/Signup Routes ---***************
 
 router.post('/signup', signup);
-router.post('/signin',basicAuth, signin);
+router.get('/signin',basicAuth, signin);
 router.get('/users',bearerMiddleware,permissions('delete'),getUsers);
 router.get('/oauth', oauth, oauthHandler);
 router.get('/oauthlinkedin', linkedinOauth, oauthHandler);
