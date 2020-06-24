@@ -48,7 +48,7 @@ describe('server.js', () => {
   it('should  /signin as a user role', () => {
     
     return mockRequest
-      .post('/signin')
+      .get('/signin')
       .set('Authorization', `Basic dGVzdHVzZXI6NTU=`)
       .then(data => {
         token = data.body.token;
@@ -61,7 +61,7 @@ describe('server.js', () => {
   it('should  /signin as a user role', () => {
     
     return mockRequest
-      .post('/signin')
+      .get('/signin')
       .set('Authorization', `Basic dhkhdfjkdhkdkh`)
       .then(data => {
         expect(data.status).toBe(500);
