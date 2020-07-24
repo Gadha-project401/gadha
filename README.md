@@ -10,14 +10,14 @@
   [Trello](https://trello.com/b/sw0kMHjP/graduation-project)
 
 ## The Idea of the project  
-  it is a motivational app that motivates the users to move on in their lives, to achieve their goals, to reach success  
+  It is a motivational app that motivates the users to move on in their lives, to achieve their goals, to reach success  
   also, they can see other people success stories or achieved goals from other users  
-  they can publish their own stories so others can motivate from them  
+  they can publish their own stories so others can get motivated from them.
 
 ## Vision 
 ![OurVision](./assets/OurVision.png) 
 
-## WireFrame
+## Wireframe
 ![WireFrame](./assets/uml.PNG) 
 
 
@@ -33,9 +33,9 @@
 
 
 ## stretch goals  
-  - User will be able to login useing facebook 
-  - Convert the web app language to Arabic
-  - Posts Notifications 
+  - User will be able to login using LinkedIn. 
+  - Convert the web app language to Arabic.
+  - Posts Notifications.
 
 
 ## Future wireframe

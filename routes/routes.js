@@ -26,9 +26,25 @@ const io = require('socket.io-client');
 const socket = io.connect('https://gadha-dev.herokuapp.com/');
 
 
+const fs = require('fs'); 
+const path = require('path'); 
+const multer = require('multer'); 
+
+const storage = multer.diskStorage({ 
+  destination: (req, file, cb) => { 
+      cb(null, __dirname +  '/uploads') 
+  }, 
+  filename: (req, file, cb) => { 
+      cb(null, file.fieldname + '-' + Date.now()) 
+  } 
+}); 
+
+const upload = multer({ storage: storage }); 
+
+
 // ***************--- The Signin/Signup Routes ---***************
 
-router.post('/signup', signup);
+router.post('/signup', upload.single('image') , signup);
 router.get('/signin',basicAuth, signin);
 router.get('/users',bearerMiddleware,permissions('delete'),getUsers);
 router.get('/oauth', oauth, oauthHandler);
@@ -243,12 +259,25 @@ function getProgress(req,res,next){
  * @param {function} next The next function that is responsible for the middlewares.
  */
 function signup (req,res,next){
+  let newUser = {
+    username: req.body.username,
+    fullName : req.body.fullName,
+    password : req.body.password,
+    gender : req.body.gender,
+    country: req.body.country,
+    birthday: req.body.birthday,
+    createdAt: req.body.createdAt,
+    img: { 
+      data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)), 
+      contentType: 'image/png'
+  } 
+  }
   user
-    .create(req.body)
+    .create(newUser)
     .then(result =>{
       let answer = {};
       answer.token = user.generateToken(result);
-      answer.user = {username:result.username, password:result.password};
+      answer.user = {username:result.username, password:result.password , profilePic : result.img};
       res.status(201).json(answer);
     }).catch(next);
 }
