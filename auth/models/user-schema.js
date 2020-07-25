@@ -37,6 +37,7 @@ const users = mongoose.Schema({
   country:{type:String,lowercase:true,required:true,default:'jordan'},
   birthday:{type:String, required:true},
   createdAt:{type:Date, default:new Date()},
+  profilePic : {type:String, default:'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRcmHDwB_4wghy1PoY5WOkxHK4wf4k3MJ-17g&usqp=CAU'}
 });
 
 let roles = {
